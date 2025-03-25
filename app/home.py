@@ -1,12 +1,29 @@
 import streamlit as st
 import random
 from scripts import update_weights
+st.set_page_config(layout="wide")
 
 machine_choice = {0: 'Орел', 1: 'Решка'}
-st.title("Произнеси вслух слово орел или решка")
-
-st.header("И нажми на кнопку получить предсказание")
-
+cool1, cool2 = st.columns([3,1])
+with cool1:
+    st.title("Произнеси вслух слово орел или решка")
+    st.header("И нажми на кнопку получить предсказание")
+    
+with cool2:
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    
+    rounds = st.number_input(label='сколько раундов', min_value =10, max_value=500, value=50,  step = 5)
+    
 start_pred = st.button("получить предсказание")
 
 if 'clear_all' in st.session_state:
@@ -33,7 +50,7 @@ if 'first' not in st.session_state:
     st.session_state['prediction'] = machine_choice[st.session_state['prediction_num']]
     st.session_state['first'] = True
 
-if start_pred and st.session_state['machine_win_count'] < 30 and st.session_state['human_win_count']<30:
+if start_pred and st.session_state['machine_win_count'] < rounds and st.session_state['human_win_count']<rounds:
     if 'second' not in st.session_state:
         st.session_state['prediction_num'] = random.randint(0,1)
         st.session_state['prediction'] = machine_choice[st.session_state['prediction_num']]
@@ -95,13 +112,13 @@ if start_pred or 'second' in st.session_state:
 
 if 'first_guess' in st.session_state: 
 
-    progress_machine = st.session_state['machine_win_count'] / 50
-    progress_human = st.session_state['human_win_count'] / 50
+    progress_machine = st.session_state['machine_win_count'] / rounds
+    progress_human = st.session_state['human_win_count'] / rounds
 
     st.progress(progress_machine, text='машина')
     st.progress(progress_human, text='ты')
 
-    if st.session_state['machine_win_count'] > 49 or st.session_state['human_win_count']>49:
+    if st.session_state['machine_win_count'] > rounds-1 or st.session_state['human_win_count']>rounds-1:
         st.subheader("Игра завершена")
         
         if st.session_state['machine_win_count'] > st.session_state['human_win_count']:
