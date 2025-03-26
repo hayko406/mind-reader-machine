@@ -33,17 +33,28 @@ if 'clear_all' in st.session_state:
 
 if 'first' not in st.session_state:
     st.session_state['machine_win_count'], st.session_state['human_win_count'] = 0, 0
+#     st.session_state['strategy'] = {
+#     "win": {
+#         "change": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}},
+#         "same": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}}
+#     },
+#     "lose": {
+#         "change": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}},
+#         "same": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}}
+#     }
+# }
+    
     st.session_state['strategy'] = {
     "win": {
-        "change": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}},
-        "same": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}}
+        "change": {"win": [], "lose": []},
+        "same": {"win": [], "lose": []}
     },
     "lose": {
-        "change": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}},
-        "same": {"win": {"change": 0, "same": 0}, "lose": {"change": 0, "same": 0}}
+        "change": {"win": [], "lose": []},
+        "same": {"win": [], "lose": []}
     }
 }
-    
+     
     st.session_state['all_human_choice'] = []
     st.session_state['all_human_results'] = []
     st.session_state['prediction_num'] = random.randint(0,1)
@@ -75,14 +86,15 @@ if start_pred and st.session_state['machine_win_count'] < rounds and st.session_
                 
                 last_res = st.session_state['all_human_results'][-1]
                 last_choice = st.session_state['all_human_choice'][-1]
+                human_tactic = st.session_state['strategy'][first_res][first_change][last_res][-2:]
+                len_ = len(human_tactic)
                 
-                if st.session_state['strategy'][first_res][first_change][last_res]['same'] > st.session_state['strategy'][first_res][first_change][last_res]['change']:
+                if len_ == 2 and human_tactic[-2] == human_tactic[-1] == 'same':
                     st.session_state['prediction_num'] = last_choice
-                elif st.session_state['strategy'][first_res][first_change][last_res]['same'] < st.session_state['strategy'][first_res][first_change][last_res]['change']:
+                elif len_ == 2 and human_tactic[-2] == human_tactic[-1] == 'change':
                     st.session_state['prediction_num'] = int((last_choice - 1) ** 2)
                 else:
                     st.session_state['prediction_num'] = random.randint(0,1)
-                
                 st.session_state['prediction'] = machine_choice[st.session_state['prediction_num']]
         
 if start_pred or 'second' in st.session_state:
